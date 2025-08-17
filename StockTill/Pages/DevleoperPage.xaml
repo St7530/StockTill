@@ -1,0 +1,17 @@
+﻿<ui:Page x:Class="StockTill.Pages.DeveloperPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:StockTill.Pages"
+      xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="开发者工具">
+
+    <StackPanel>
+        <ui:InfoBar Title="警告" IsOpen="True" IsClosable="False" Severity="Warning" Message="本页面包含危险操作，随意执行可能导致不可挽回的数据丢失。若您不了解操作目的，请勿尝试！" Margin="0,0,0,20"/>
+        <TextBox ui:ControlHelper.Header="输入框" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,20" />
+        <Button x:Name="dropButton" Content="删除数据库" IsEnabled="True" />
+    </StackPanel>
+</ui:Page>

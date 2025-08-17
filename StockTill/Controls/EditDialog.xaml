@@ -1,0 +1,25 @@
+﻿<ui:ContentDialog x:Class="StockTill.Controls.EditDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+    xmlns:controls="clr-namespace:StockTill.Controls"
+    Title="编辑商品"
+    d:DesignHeight="756"
+    d:DesignWidth="548"
+    DefaultButton="Primary"
+    PrimaryButtonClick="OnPrimaryButtonClick"
+    PrimaryButtonText="完成"
+    CloseButtonText="取消"
+    mc:Ignorable="d">
+    <StackPanel>
+        <TextBlock Margin="0,0,0,20"><Bold>提示：</Bold>商品编号无法被修改。<LineBreak/>对库存数量的修改也会被计为商品入库和出库。</TextBlock>
+        <TextBox ui:ControlHelper.Header="商品编号" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Margin="0,0,0,16" />
+        <TextBox ui:ControlHelper.Header="商品名称" Text="{Binding name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" />
+        <ui:NumberBox Header="库存数量" Value="{Binding quantity, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" Margin="0,0,0,16" />
+        <ui:NumberBox Header="单件成本" Value="{Binding cost, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" Margin="0,0,0,16" />
+        <ui:NumberBox Header="单件售价" Value="{Binding price, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" />
+        <ui:ProgressBar x:Name="progressBar" IsIndeterminate="True" Visibility="Collapsed" Margin="0,24,0,0" />
+    </StackPanel>
+</ui:ContentDialog>

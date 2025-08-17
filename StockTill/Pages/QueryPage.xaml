@@ -1,0 +1,42 @@
+﻿<ui:Page x:Class="StockTill.Pages.QueryPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:StockTill.Pages"
+      xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="统计查询">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Margin="0,0,0,20"><Bold>提示：</Bold>若不选择日期，则默认为今天。</TextBlock>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+            <DatePicker x:Name="StartPicker" ui:ControlHelper.Header="开始日期" IsTodayHighlighted="True" Width="130" Margin="0,0,8,0" />
+            <DatePicker x:Name="EndPicker" ui:ControlHelper.Header="结束日期" IsTodayHighlighted="True" Width="130" Margin="0,0,8,0" />
+            <ComboBox x:Name="OperationCombo" ui:ControlHelper.Header="选择操作" SelectedIndex="2" Margin="0,0,8,0" >
+                <ComboBoxItem Content="入库"/>
+                <ComboBoxItem Content="出库"/>
+                <ComboBoxItem Content="入库 &amp; 出库"/>
+            </ComboBox>
+            <Button x:Name="QueryButton" Content="查询" Style="{DynamicResource {x:Static ui:ThemeKeys.AccentButtonStyleKey}}" VerticalAlignment="Bottom" Click="QueryButton_Click" />
+        </StackPanel>
+        <DataGrid x:Name="QueryGrid" Grid.Row="2" Loaded="QueryGrid_Loaded" IsReadOnly="True" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <TextBlock Margin="24">
+                <Bold>总成本：</Bold><Run Text="{Binding Cost, UpdateSourceTrigger=PropertyChanged}" /> 元
+            </TextBlock>
+            <TextBlock Margin="24">
+                <Bold>总售价：</Bold><Run Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" /> 元
+            </TextBlock>
+            <TextBlock Margin="24">
+                <Bold>总盈利：</Bold><Run Text="{Binding Profit, UpdateSourceTrigger=PropertyChanged}" /> 元
+            </TextBlock>
+        </StackPanel>
+    </Grid>
+</ui:Page>
