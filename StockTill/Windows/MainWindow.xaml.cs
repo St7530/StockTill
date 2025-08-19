@@ -11,7 +11,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace StockTill
@@ -26,13 +25,14 @@ namespace StockTill
         public Pages.QueryPage Page_Query = new Pages.QueryPage();
         public Pages.DeveloperPage Page_Developer = new Pages.DeveloperPage();
         public Pages.SettingsPage Page_Settings = new Pages.SettingsPage();
-        public Pages.WelcomePage Page_Welcome = new Pages.WelcomePage();
+        //public Pages.WelcomePage Page_Welcome = new Pages.WelcomePage();
         public MainWindow()
         {
             InitializeComponent();
 
-            NavigationView_Root.Header = Page_Welcome.Title;
-            Frame_Main.Navigate(Page_Welcome);
+            NavigationView_Root.SelectedItem = NavigationViewItem_Till;
+            NavigationView_Root.Header = Page_Till.Title;
+            Frame_Main.Navigate(Page_Till);
         }
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -53,16 +53,11 @@ namespace StockTill
                 NavigationView_Root.Header = page.Title;
                 Frame_Main.Navigate(page);
             }
-            
+
         }
         public void SetDeveloperPageVisibility(Visibility visibility)
         {
             NavigationViewItem_Developer.Visibility = visibility;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //NavigationView_Root.SelectedItem = NavigationViewItem_Home;
         }
     }
 }

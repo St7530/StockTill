@@ -38,6 +38,7 @@ namespace StockTill.Pages
         {
             Cost = 0;
             Price = 0;
+            Profit = 0;
             DataTable data = new DataTable();
 
             data.Columns.Add("商品编号");
@@ -95,7 +96,16 @@ namespace StockTill.Pages
                         break;
                 }
             }
-            Profit = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
+            try
+            {
+                Profit = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
+                NotFoundBlock.Visibility = Visibility.Collapsed;
+            }
+            catch (Exception)
+            { // 找不到结果
+                NotFoundBlock.Visibility = Visibility.Visible;
+            }
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StockTill.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,12 @@ namespace StockTill.Pages
         public DeveloperPage()
         {
             InitializeComponent();
+        }
+
+        private void DropButton_Click(object sender, RoutedEventArgs e)
+        {
+            SqlHelper.Instance.DropSchema();
+            DeleteFlyout.Hide();
         }
     }
 }

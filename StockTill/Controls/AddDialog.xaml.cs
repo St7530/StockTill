@@ -37,9 +37,9 @@ namespace StockTill.Controls
         {
             var deferral = args.GetDeferral(); // 阻止默认的关闭行为
 
-            progressBar.Visibility = Visibility.Visible;
+            DialogProgress.Visibility = Visibility.Visible;
 
-            if (SqlHelper.Instance.ExecuteScalar($"SELECT 1 FROM StockTillSchema.Goods WHERE id = {id}"))
+            if (SqlHelper.Instance.SelectById(id) != null)
             {
                 MessageBox.Show("商品编号重复。", "新增失败", MessageBoxButton.OK, MessageBoxImage.Hand);
                 args.Cancel = true; // 阻止关闭
@@ -48,13 +48,13 @@ namespace StockTill.Controls
             {
                 SqlHelper.Instance.Insert(Id, name, quantity, cost, price);
                 if (quantity > 0)
-				{
-					SqlHelper.Instance.InsertLog(id, false, quantity);
-				}
-				args.Cancel = false; // 允许关闭
+                {
+                    SqlHelper.Instance.InsertLog(id, false, quantity);
+                }
+                args.Cancel = false; // 允许关闭
             }
-            
-            progressBar.Visibility = Visibility.Collapsed;
+
+            DialogProgress.Visibility = Visibility.Collapsed;
             deferral.Complete();
         }
     }

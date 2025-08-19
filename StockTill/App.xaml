@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:StockTill"
              xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
-             StartupUri="InitWindow.xaml">
+             StartupUri="Windows/InitWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

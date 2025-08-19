@@ -14,7 +14,7 @@
             <ui:SettingsCard.HeaderIcon>
                 <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.DeveloperTools}"/>
             </ui:SettingsCard.HeaderIcon>
-            <ui:ToggleSwitch Toggled="ToggleSwitch_Toggled"/>
+            <ui:ToggleSwitch x:Name="DeveloperToggleSwitch" IsOn="False" Toggled="DeveloperToggleSwitch_Toggled"/>
         </ui:SettingsCard>
 
         <TextBlock Text="关于" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="1,30,0,6"/>

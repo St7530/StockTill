@@ -6,20 +6,23 @@
     xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
     xmlns:controls="clr-namespace:StockTill.Controls"
     Title="新增商品"
-    d:DesignHeight="756"
-    d:DesignWidth="548"
+    d:DesignHeight="756" d:DesignWidth="548"
     DefaultButton="Primary"
     PrimaryButtonClick="OnPrimaryButtonClick"
     PrimaryButtonText="完成"
     CloseButtonText="取消"
     mc:Ignorable="d">
     <StackPanel>
-        <TextBlock Margin="0,0,0,20"><Bold>注意：</Bold>商品编号在新增后无法被修改。<LineBreak/>使用扫码枪时，请确保其他信息输入完毕后，再扫描商品编号。<LineBreak/>若库存数量大于零，也会被计为商品入库。</TextBlock>
+        <TextBlock Margin="0,0,0,20">
+            <Bold>注意：</Bold>商品编号在新增后无法被修改。<LineBreak/>
+            使用扫码枪时，请确保其他信息输入完毕后，再扫描商品编号。<LineBreak/>
+            若库存数量大于零，也会被计为商品入库。
+        </TextBlock>
         <TextBox ui:ControlHelper.Header="商品名称" Text="{Binding name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" />
-        <ui:NumberBox Header="库存数量" Value="{Binding quantity, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" Margin="0,0,0,16" />
-        <ui:NumberBox Header="单件成本" Value="{Binding cost, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" Margin="0,0,0,16" />
-        <ui:NumberBox Header="单件售价" Value="{Binding price, UpdateSourceTrigger=PropertyChanged}" SpinButtonPlacementMode="Inline" Minimum="0" Margin="0,0,0,16" />
+        <ui:NumberBox Header="库存数量" Value="{Binding quantity, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,0,16" />
+        <ui:NumberBox Header="单件成本" Value="{Binding cost, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,0,16" />
+        <ui:NumberBox Header="单件售价" Value="{Binding price, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,0,16" />
         <TextBox ui:ControlHelper.Header="商品编号" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" />
-        <ui:ProgressBar x:Name="progressBar" IsIndeterminate="True" Visibility="Collapsed" Margin="0,24,0,0" />
+        <ui:ProgressBar x:Name="DialogProgress" IsIndeterminate="True" Visibility="Collapsed" Margin="0,24,0,0" />
     </StackPanel>
 </ui:ContentDialog>

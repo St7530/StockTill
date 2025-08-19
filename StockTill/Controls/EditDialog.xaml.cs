@@ -41,7 +41,7 @@ namespace StockTill.Controls
         }
         private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            progressBar.Visibility = Visibility.Visible;
+            DialogProgress.Visibility = Visibility.Visible;
             SqlHelper.Instance.UpdateById(Id, name, quantity, cost, price);
 			if (quantity > formerQuantity)
 			{

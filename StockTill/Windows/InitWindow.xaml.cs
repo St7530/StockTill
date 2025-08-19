@@ -32,18 +32,21 @@ namespace StockTill
 
         private async void InitialzeSql()
         {
-            await Task.Delay(1000);
+            await Task.Delay(1);
 
             try
             {
-                if (SqlHelper.Instance.Connect())
+                InitBlock.Text = "正在连接数据库";
+                if (await SqlHelper.Instance.ConnectAsync())
                 {
-                    MainWindow mainWindow = new MainWindow();
-                    mainWindow.Show();
+                    InitBlock.Text = "欢迎使用 StockTill";
+                    await Task.Delay(1000);
+                    new MainWindow().Show();
                     this.Close();
                 }
-                else //数据库中不存在所需的表。此时应创建
-                {
+                else
+                {  //数据库中不存在所需的表。此时应创建
+                    InitBlock.Text = "正在初始化数据库";
                     SqlHelper.Instance.Initialize();
                     InitialzeSql();
                 }

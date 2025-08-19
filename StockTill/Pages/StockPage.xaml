@@ -15,24 +15,20 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12">
-            <Button x:Name="AddButton" Content="新增商品" Click="AddButton_Click" Height="32" Margin="0,0,8,0"/>
-            <Button x:Name="EditButton" Content="编辑选中" IsEnabled="False" Click="EditButton_Click" Height="32" Margin="0,0,8,0"/>
-            <Button x:Name="DeleteButton" Content="删除选中" IsEnabled="False" Height="32" Margin="0,0,8,0" >
+            <Button x:Name="AddButton" Content="新增商品" Click="AddButton_Click" Height="32" Margin="0,0,8,0" />
+            <Button x:Name="EditButton" Content="编辑选中" IsEnabled="False" Click="EditButton_Click" Height="32" Margin="0,0,8,0" />
+            <Button x:Name="DeleteButton" Content="删除选中" IsEnabled="False" Height="32" Margin="0,0,8,0">
                 <ui:FlyoutService.Flyout>
-                    <ui:Flyout x:Name="deleteFlyout" Placement="TopEdgeAlignedLeft">
+                    <ui:Flyout x:Name="DeleteFlyout" Placement="TopEdgeAlignedLeft">
                         <StackPanel>
-                            <TextBlock
-                                Margin="0,0,0,12"
-                                Style="{DynamicResource BaseTextBlockStyle}"
-                                Text="确认要删除选中的商品吗？此操作无法恢复。" />
-                            <Button Click="DeleteButton_Click" Content="删除" />
+                            <TextBlock Text="确认要删除选中的商品吗？此操作无法恢复。" Margin="0,0,0,12" />
+                            <Button Content="删除" Click="DeleteButton_Click" />
                         </StackPanel>
                     </ui:Flyout>
                 </ui:FlyoutService.Flyout>
             </Button>
-            <TextBox x:Name="SearchBox" Width="320" Height="32" Loaded="SearchBox_Loaded" TextChanged="SearchBox_TextChanged" ui:ControlHelper.PlaceholderText="搜索商品编号或商品名称…" />
+            <TextBox x:Name="SearchBox" ui:ControlHelper.PlaceholderText="搜索商品编号或商品名称…" Width="320" Height="32" Loaded="SearchBox_Loaded" TextChanged="SearchBox_TextChanged" />
         </StackPanel>
-
-        <DataGrid x:Name="StockGrid" Grid.Row="1" Loaded="StockGrid_Loaded" SelectionChanged="StockGrid_SelectionChanged" IsReadOnly="True" />
+        <DataGrid Grid.Row="1" x:Name="StockGrid" IsReadOnly="True" Loaded="StockGrid_Loaded" SelectionChanged="StockGrid_SelectionChanged" />
     </Grid>
 </ui:Page>

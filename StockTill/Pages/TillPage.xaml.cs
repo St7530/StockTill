@@ -34,7 +34,8 @@ namespace StockTill.Pages
             InitializeComponent();
             DataContext = this;
         }
-        public void InitData()
+
+        private void InitData()
         {
             TotalPrice = 0;
             data.Clear();
@@ -57,14 +58,14 @@ namespace StockTill.Pages
                 }
             }
         }
-        public bool UpdateTill(string id, int quantity)
+        private bool UpdateTill(string id, int quantity)
         {
             DataRow[] foundRows = data.Select($"商品编号 = '{id}'");
 
             if (foundRows.Length > 0)
             { // 商品已经存在，需要对其进行数量自增
                 DataRow foundRow = foundRows[0];
-                DataRow? row = SqlHelper.Instance.SelectById(id);
+                DataRow row = SqlHelper.Instance.SelectById(id);
                 if ((int)row["quantity"] >= (int)foundRow["数量"] + quantity)
                 { // 商品库存数量足够
                     foundRow["数量"] = (int)foundRow["数量"] + quantity;
@@ -77,7 +78,7 @@ namespace StockTill.Pages
             }
             else
             { // 商品尚未存在，需要创建新列
-                if (SqlHelper.Instance.ExecuteScalar($"SELECT 1 FROM StockTillSchema.Goods WHERE id = {id}"))
+                if (SqlHelper.Instance.SelectById(id) != null)
                 { // 库存中有该商品
                     DataRow? row = SqlHelper.Instance.SelectById(id);
 
@@ -111,14 +112,8 @@ namespace StockTill.Pages
         }
         private void IdBox_Loaded(object sender, RoutedEventArgs e)
         {
-            IdBox.Focus();
+            IdBox.Focus(); // 自动获得焦点
         }
-
-        private void TillGrid_Loaded(object sender, RoutedEventArgs e)
-        {
-            InitData();
-        }
-
         private void IdBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && IdBox.Text != "")
@@ -127,25 +122,14 @@ namespace StockTill.Pages
                 IdBox.Text = "";
             }
         }
-
-        private void TillButton_Click(object sender, RoutedEventArgs e)
-        {
-            foreach (DataRow row in data.Rows)
-            {
-                string id = row["商品编号"].ToString();
-                int quantity = (int)row["数量"];
-                SqlHelper.Instance.InsertLog(id, true, quantity);
-                SqlHelper.Instance.ReduceQuantityById(id, quantity);
-            }
-            data.Clear();
-            TotalPrice = 0;
-        }
-
         private void EraseButton_Click(object sender, RoutedEventArgs e)
         {
             InitData();
         }
-
+        private void TillGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            InitData();
+        }
         private void TillGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (e.Row.Item is DataRowView rowView)
@@ -162,6 +146,18 @@ namespace StockTill.Pages
                     }
                 }
             }
+        }
+        private void TillButton_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (DataRow row in data.Rows)
+            {
+                string id = row["商品编号"].ToString();
+                int quantity = (int)row["数量"];
+                SqlHelper.Instance.InsertLog(id, true, quantity);
+                SqlHelper.Instance.ReduceQuantityById(id, quantity);
+            }
+            data.Clear();
+            TotalPrice = 0;
         }
     }
 }

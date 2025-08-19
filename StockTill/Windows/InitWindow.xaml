@@ -10,12 +10,13 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
         mc:Ignorable="d"
-        Title="initWindow" Height="450" Width="800">
+        Title="StockTill | Initializing..." Height="450" Width="800">
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
@@ -34,12 +35,10 @@
                 <TranslateTransform X="-10"/>
             </FrameworkElement.RenderTransform>
         </Image>-->
-        <ui:ProgressRing
-            Name="splashProgressRing"
-            Grid.Row="2"
-            Grid.Column="1"
-            HorizontalAlignment="Center"
-            IsActive="True"
-            />
+        <ui:FontIcon Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="{x:Static ui:SegoeFluentIcons.AppIconDefault}"/>
+        <StackPanel Grid.Row="2" Grid.Column="1" >
+            <ui:ProgressRing HorizontalAlignment="Center" Margin="24"/>
+            <TextBlock x:Name="InitBlock" HorizontalAlignment="Center" FontSize="18" />
+        </StackPanel>
     </Grid>
 </Window>

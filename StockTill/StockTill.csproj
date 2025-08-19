@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Scanner.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
     <PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.10.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
@@ -20,6 +24,10 @@
     <Compile Update="Controls\EditDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\Scanner.png" />
   </ItemGroup>
 
 </Project>

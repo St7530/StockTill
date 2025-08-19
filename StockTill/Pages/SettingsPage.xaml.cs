@@ -28,19 +28,10 @@ namespace StockTill.Pages
             InitializeComponent();
         }
 
-        private void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        private void DeveloperToggleSwitch_Toggled(object sender, RoutedEventArgs e)
         {
-            ToggleSwitch toggleSwitch = sender as ToggleSwitch;
-            if (toggleSwitch != null)
-			{
-				Window window = Window.GetWindow(toggleSwitch);
-				if (window is MainWindow mainWindow)
-				{
-					mainWindow.SetDeveloperPageVisibility(
-						toggleSwitch.IsOn ? Visibility.Visible : Visibility.Hidden
-					);
-				}
-			}
+            MainWindow mainWindow = (MainWindow)Window.GetWindow(DeveloperToggleSwitch);
+            mainWindow.SetDeveloperPageVisibility(DeveloperToggleSwitch.IsOn ? Visibility.Visible : Visibility.Hidden);
         }
     }
 }

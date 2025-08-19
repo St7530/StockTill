@@ -10,8 +10,19 @@
       Title="开发者工具">
 
     <StackPanel>
-        <ui:InfoBar Title="警告" IsOpen="True" IsClosable="False" Severity="Warning" Message="本页面包含危险操作，随意执行可能导致不可挽回的数据丢失。若您不了解操作目的，请勿尝试！" Margin="0,0,0,20"/>
+        <ui:InfoBar Title="警告" Severity="Warning" Message="本页面包含危险操作，随意执行可能导致不可挽回的数据丢失。若您不了解操作目的，请勿尝试！" IsOpen="True" IsClosable="False" Margin="0,0,0,20"/>
         <TextBox ui:ControlHelper.Header="输入框" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,0,0,20" />
-        <Button x:Name="dropButton" Content="删除数据库" IsEnabled="True" />
+        <TextBlock Text="扫码枪设置" Margin="0,0,0,12"/>
+        <Image Source="/Assets/Scanner.png" Height="100" HorizontalAlignment="Left" Margin="0,0,0,16" />
+        <Button x:Name="DropButton" Content="删除数据库">
+            <ui:FlyoutService.Flyout>
+                <ui:Flyout x:Name="DeleteFlyout" Placement="TopEdgeAlignedLeft">
+                    <StackPanel>
+                        <TextBlock Text="确认要删除数据库吗？此操作无法恢复。" Margin="0,0,0,12" />
+                        <Button Content="删除" Click="DropButton_Click" />
+                    </StackPanel>
+                </ui:Flyout>
+            </ui:FlyoutService.Flyout>
+        </Button>
     </StackPanel>
 </ui:Page>
