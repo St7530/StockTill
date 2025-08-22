@@ -8,18 +8,23 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="库存管理">
-
-    <Grid>
+    <Page.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+    </Page.Resources>
+    <Grid Margin="56,36,56,36">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12">
-            <Button x:Name="AddButton" Content="新增商品" Click="AddButton_Click" Height="32" Margin="0,0,8,0" />
-            <Button x:Name="EditButton" Content="编辑选中" IsEnabled="False" Click="EditButton_Click" Height="32" Margin="0,0,8,0" />
-            <Button x:Name="DeleteButton" Content="删除选中" IsEnabled="False" Height="32" Margin="0,0,8,0">
+            <Button x:Name="AddButton" Content="新增商品" Click="AddButton_Click" />
+            <Button x:Name="EditButton" Content="编辑选中" IsEnabled="False" Click="EditButton_Click" />
+            <Button x:Name="DeleteButton" Content="删除选中" IsEnabled="False">
                 <ui:FlyoutService.Flyout>
-                    <ui:Flyout x:Name="DeleteFlyout" Placement="TopEdgeAlignedLeft">
+                    <ui:Flyout x:Name="DropDBFlyout" Placement="TopEdgeAlignedLeft">
                         <StackPanel>
                             <TextBlock Text="确认要删除选中的商品吗？此操作无法恢复。" Margin="0,0,0,12" />
                             <Button Content="删除" Click="DeleteButton_Click" />
@@ -27,7 +32,8 @@
                     </ui:Flyout>
                 </ui:FlyoutService.Flyout>
             </Button>
-            <TextBox x:Name="SearchBox" ui:ControlHelper.PlaceholderText="搜索商品编号或商品名称…" Width="320" Height="32" Loaded="SearchBox_Loaded" TextChanged="SearchBox_TextChanged" />
+            <TextBox x:Name="SearchBox" ui:ControlHelper.PlaceholderText="搜索商品编号或商品名称…" Width="320" Height="32" Margin="0,0,8,0" Loaded="SearchBox_Loaded" TextChanged="SearchBox_TextChanged" />
+            <TextBlock Text="{Binding CountText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" />
         </StackPanel>
         <DataGrid Grid.Row="1" x:Name="StockGrid" IsReadOnly="True" Loaded="StockGrid_Loaded" SelectionChanged="StockGrid_SelectionChanged" />
     </Grid>

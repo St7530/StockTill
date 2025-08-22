@@ -8,18 +8,23 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="扫码出库">
-    <Grid>
+    <Grid Margin="56,36,56,36">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
-            <TextBox x:Name="IdBox" ui:ControlHelper.Header="扫描或输入商品编号，按回车确认：" ui:ControlHelper.PlaceholderText="商品编号" Loaded="IdBox_Loaded" KeyDown="IdBox_KeyDown" Width="320" Margin="0,0,8,0"/>
-            <Button x:Name="EraseButton" Content="清空所有" Click="EraseButton_Click" VerticalAlignment="Bottom" Width="Auto" Margin="0,0,8,0"/>
+        <TextBlock Grid.Row="0" Margin="0,0,0,20">
+            <Bold>提示：</Bold>如果同一个商品有多件，可以直接修改数量，而无需扫描或输入多次。
+        </TextBlock>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,16">
+            <TextBox x:Name="IdBox" ui:ControlHelper.Header="扫描或输入商品编号，按回车确认：" ui:ControlHelper.PlaceholderText="商品编号" Loaded="IdBox_Loaded" KeyDown="IdBox_KeyDown" Width="340" Margin="0,0,8,0"/>
+            <Button x:Name="EraseButton" Content="清空所有" Click="EraseButton_Click" VerticalAlignment="Bottom" Margin="0,0,8,0"/>
+            <TextBlock Text="{Binding CountText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Height="24" />
         </StackPanel>
-        <DataGrid Grid.Row="1" x:Name="TillGrid" CanUserAddRows="False" Loaded="TillGrid_Loaded" CellEditEnding="TillGrid_CellEditEnding" />
-        <StackPanel Grid.Row="2" Orientation="Horizontal">
+        <DataGrid Grid.Row="2" x:Name="TillGrid" CanUserAddRows="False" Loaded="TillGrid_Loaded" CellEditEnding="TillGrid_CellEditEnding" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal">
             <TextBlock Margin="24">
                 <Bold>总金额：</Bold><Run Text="{Binding TotalPrice, UpdateSourceTrigger=PropertyChanged}" /> 元
             </TextBlock>

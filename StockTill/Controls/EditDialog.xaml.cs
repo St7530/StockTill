@@ -1,11 +1,7 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
-using Microsoft.Data.SqlClient;
 using PropertyChanged;
-using StockTill.Helpers;
-using System;
-using System.ComponentModel;
 using System.Windows;
-using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
+using StockTill.Helpers;
 
 namespace StockTill.Controls
 {
@@ -42,13 +38,13 @@ namespace StockTill.Controls
         private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
             DialogProgress.Visibility = Visibility.Visible;
-            SqlHelper.Instance.UpdateById(Id, name, quantity, cost, price);
+            SqlHelper.UpdateById(Id, name, quantity, cost, price);
 			if (quantity > formerQuantity)
 			{
-				SqlHelper.Instance.InsertLog(id, false, quantity-formerQuantity);
+				SqlHelper.InsertLog(id, false, quantity-formerQuantity);
 			}else if (quantity < formerQuantity)
             {
-                SqlHelper.Instance.InsertLog(id, true, formerQuantity - quantity);
+                SqlHelper.InsertLog(id, true, formerQuantity - quantity);
             }
 		}
     }

@@ -1,39 +1,21 @@
-﻿using ABI.System;
-using Azure;
-using Microsoft.Data.SqlClient;
-using System;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System.Data;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
 using DateTimeOffset = System.DateTimeOffset;
 
 namespace StockTill.Helpers
 {
-    public sealed class SqlHelper
+    internal static class SqlHelper
     {
-        // 单例实例
-        private static readonly Lazy<SqlHelper> _instance =
-            new Lazy<SqlHelper>(() => new SqlHelper());
+        private static string ConnectionString => ConfigHelper.GetConnectionString();
 
-        public static SqlHelper Instance => _instance.Value;
-
-        private const string ConnectionString = "Server=localhost\\SQLEXPRESS;Database=StockTillDB;Trusted_Connection=True;TrustServerCertificate=True;";
-
-        /*public bool Connect()
-        {
-            using var conn = new SqlConnection(ConnectionString);
-            conn.Open();
-            int count = (int)(new SqlCommand("SELECT COUNT(*) FROM sys.tables WHERE name = 'Goods' AND schema_id = SCHEMA_ID('StockTillSchema')", conn)).ExecuteScalar();
-            return count > 0;
-        }*/
-        public async Task<bool> ConnectAsync()
+        public static async Task<bool> ConnectAsync()
         {
             string sql = "SELECT COUNT(*) FROM sys.tables WHERE name = 'Goods' AND schema_id = SCHEMA_ID('StockTillSchema')";
             var result = await ExecuteScalarAsync(sql);
             return result is int count && count > 0;
         }
-        public void Initialize()
+        public static void Initialize()
         {
             string initSql = @"
 -- 1. 创建 Schema（如果不存在）
@@ -92,18 +74,18 @@ END
 
             ExecuteNonQuery(initSql);
         }
-        public DataTable SelectAll()
+        public static DataTable SelectAll()
         {
             string sql = "SELECT * FROM StockTillSchema.Goods";
             return ExecuteQuery(sql);
         }
-        public DataRow? SelectById(string id)
+        public static DataRow? SelectById(string id)
         {
             string sql = "SELECT * FROM StockTillSchema.Goods WHERE id = @id";
             var dataTable = ExecuteQuery(sql, new SqlParameter("@id", id));
             return dataTable.Rows.Count > 0 ? dataTable.Rows[0] : null;
         }
-        public void Insert(string id, string name, int quantity, decimal cost, decimal price)
+        public static void Insert(string id, string name, int quantity, decimal cost, decimal price)
         {
             string sql = """
                 INSERT INTO StockTillSchema.Goods (id, name, quantity, cost, price)
@@ -117,7 +99,7 @@ END
                 new SqlParameter("@price", price)
             ]);
         }
-        public void UpdateById(string id, string name, int quantity, decimal cost, decimal price)
+        public static void UpdateById(string id, string name, int quantity, decimal cost, decimal price)
         {
             string sql = """
                 UPDATE StockTillSchema.Goods 
@@ -132,12 +114,12 @@ END
                 new SqlParameter("@price", price)
             ]);
         }
-        public void DeleteById(string id)
+        public static void DeleteById(string id)
         {
             string sql = "DELETE FROM [StockTillSchema].[Goods] WHERE [id] = @id";
             ExecuteNonQuery(sql, new SqlParameter("@id", id));
         }
-        public void ReduceQuantityById(string id, int reduce)
+        public static void ReduceQuantityById(string id, int reduce)
         {
             string sql = """
                 UPDATE StockTillSchema.Goods 
@@ -149,7 +131,7 @@ END
                 new SqlParameter("@id", id)
             ]);
         }
-        public void InsertLog(string id, bool isTill, int quantity)
+        public static void InsertLog(string id, bool isTill, int quantity)
         {
             string sql = """
                 INSERT INTO StockTillSchema.OperationLog (id, operation, quantity, time)
@@ -162,7 +144,7 @@ END
                 new SqlParameter("@time", SqlDbType.DateTimeOffset) { Value = DateTimeOffset.Now }
             ]);
         }
-        public DataTable SelectLog(bool? isTill, DateTimeOffset startDate, DateTimeOffset endDate)
+        public static DataTable SelectLog(bool? isTill, DateTimeOffset startDate, DateTimeOffset endDate)
         {
             string sql = """
                 SELECT
@@ -195,7 +177,7 @@ END
                 new SqlParameter("@endDate", SqlDbType.DateTimeOffset) { Value = endDate }
             ]);
         }
-        public void DropSchema()
+        public static void DropSchema()
         {
             string sql = """
                 DROP TABLE IF EXISTS [StockTillSchema].[Goods];
@@ -204,7 +186,7 @@ END
                 """;
             ExecuteNonQuery(sql);
         }
-        private DataTable ExecuteQuery(string sql, params SqlParameter[] parameters)
+        private static DataTable ExecuteQuery(string sql, params SqlParameter[] parameters)
         {
             using var conn = new SqlConnection(ConnectionString);
             using var adapter = new SqlDataAdapter(sql, conn);
@@ -219,7 +201,7 @@ END
 
             return dataTable; // 注意：Fill 完成后会自动打开/关闭连接
         }
-        private int ExecuteNonQuery(string sql, params SqlParameter[] parameters)
+        private static int ExecuteNonQuery(string sql, params SqlParameter[] parameters)
         {
             using var conn = new SqlConnection(ConnectionString);
             conn.Open();
@@ -233,7 +215,7 @@ END
 
             return command.ExecuteNonQuery();
         }
-        private bool ExecuteScalar(string sql, params SqlParameter[] parameters)
+        private static bool ExecuteScalar(string sql, params SqlParameter[] parameters)
         {
             using var conn = new SqlConnection(ConnectionString);
             conn.Open();
@@ -247,7 +229,7 @@ END
 
             return command.ExecuteScalar() != null;
         }
-        private async Task<object?> ExecuteScalarAsync(string sql, params SqlParameter[] parameters)
+        private static async Task<object?> ExecuteScalarAsync(string sql, params SqlParameter[] parameters)
         {
             using var conn = new SqlConnection(ConnectionString);
             using var cmd = new SqlCommand(sql, conn);

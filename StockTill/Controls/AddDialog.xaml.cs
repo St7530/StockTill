@@ -1,10 +1,7 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
-using Microsoft.Data.SqlClient;
 using PropertyChanged;
-using StockTill.Helpers;
-using System;
-using System.ComponentModel;
 using System.Windows;
+using StockTill.Helpers;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace StockTill.Controls
@@ -39,17 +36,17 @@ namespace StockTill.Controls
 
             DialogProgress.Visibility = Visibility.Visible;
 
-            if (SqlHelper.Instance.SelectById(id) != null)
+            if (SqlHelper.SelectById(id) != null)
             {
                 MessageBox.Show("商品编号重复。", "新增失败", MessageBoxButton.OK, MessageBoxImage.Hand);
                 args.Cancel = true; // 阻止关闭
             }
             else
             {
-                SqlHelper.Instance.Insert(Id, name, quantity, cost, price);
+                SqlHelper.Insert(Id, name, quantity, cost, price);
                 if (quantity > 0)
                 {
-                    SqlHelper.Instance.InsertLog(id, false, quantity);
+                    SqlHelper.InsertLog(id, false, quantity);
                 }
                 args.Cancel = false; // 允许关闭
             }

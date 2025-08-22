@@ -8,37 +8,83 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="设置">
+    <Page.Resources>
+        <Style TargetType="ui:SettingsCard">
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+    </Page.Resources>
+    <ui:ScrollViewerEx Margin="56,36,0,0" Padding="0,0,56,0">
+        <StackPanel>
+            <!--配置-->
+            <ui:SettingsCard Header="主题颜色" Description="选择 StockTill 使用的主题颜色">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Color}"/>
+                </ui:SettingsCard.HeaderIcon>
+                <ComboBox x:Name="ThemeCombo" Loaded="ThemeCombo_Loaded" SelectionChanged="ThemeCombo_SelectionChanged">
+                    <ComboBoxItem Content="浅色" />
+                    <ComboBoxItem Content="深色" />
+                    <ComboBoxItem Content="跟随系统设置" />
+                </ComboBox>
+            </ui:SettingsCard>
 
-    <StackPanel>
-        <ui:SettingsCard Header="开发者工具" Description="在导航视图中显示开发者工具页面">
-            <ui:SettingsCard.HeaderIcon>
-                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.DeveloperTools}"/>
-            </ui:SettingsCard.HeaderIcon>
-            <ui:ToggleSwitch x:Name="DeveloperToggleSwitch" IsOn="False" Toggled="DeveloperToggleSwitch_Toggled"/>
-        </ui:SettingsCard>
+            <ui:SettingsCard Header="数据库连接字符串" Description="编辑连接 SQL Server 数据库所需的 ConnectionString">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Permissions}"/>
+                </ui:SettingsCard.HeaderIcon>
+                <Button x:Name="ConnectionStringButton" Content="编辑" Click="ConnectionStringButton_Click" />
+            </ui:SettingsCard>
 
-        <TextBlock Text="关于" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="1,30,0,6"/>
+            <ui:SettingsExpander Header="自动检查更新" Description="在 StockTill 启动时检查更新">
+                <ui:SettingsExpander.HeaderIcon>
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Sync}"/>
+                </ui:SettingsExpander.HeaderIcon>
+                <ui:ToggleSwitch x:Name="AutoUpdateSwitch" Loaded="AutoUpdateSwitch_Loaded" Toggled="AutoUpdateSwitch_Toggled"/>
+                <ui:SettingsExpander.Items>
+                    <ui:SettingsCard Header="更新服务器" Description="编辑检查更新所需的远程 XML 文件地址">
+                        <Button x:Name="UpdateURLButton" Content="编辑" Click="UpdateURLButton_Click" />
+                    </ui:SettingsCard>
+                    <ui:SettingsCard Header="想要立即检查更新？">
+                        <Button x:Name="CheckForUpdateButton" Content="立即检查更新" Click="CheckForUpdateButton_Click" />
+                    </ui:SettingsCard>
+                </ui:SettingsExpander.Items>
+            </ui:SettingsExpander>
 
-        <ui:SettingsExpander Header="StockTill" Description="© St7530 2025. All rights reserved.">
-            <ui:SettingsExpander.HeaderIcon>
-                <!--<Image Source="/Assets/WpfLibrary_256w.png"
-                            Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"/>-->
-                <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.AppIconDefault}"/>
-            </ui:SettingsExpander.HeaderIcon>
-            <TextBlock Foreground="{DynamicResource {x:Static ui:ThemeKeys.TextFillColorSecondaryBrushKey}}"
-                    Text="0.0.1-alpha" />
-            <ui:SettingsExpander.Items>
-                <ui:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
-                    <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
-                        <TextBlock Margin="12,6,0,5" Text="Credits" />
-                        <StackPanel Margin="0,10,0,0">
-                            <ui:HyperlinkButton Content="iNKORE-NET/UI.WPF.Modern" NavigateUri="https://github.com/iNKORE-NET/UI.WPF.Modern"/>
-                            <ui:HyperlinkButton Content="Fody/PropertyChanged" NavigateUri="https://github.com/Fody/PropertyChanged" />
+            <!--调试-->
+            <TextBlock Text="调试" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="1,30,0,6"/>
+            
+            <ui:SettingsCard Header="开发者工具" Description="在导航视图中显示开发者工具页面" Margin="0">
+                <ui:SettingsCard.HeaderIcon>
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.DeveloperTools}"/>
+                </ui:SettingsCard.HeaderIcon>
+                <ui:ToggleSwitch x:Name="DeveloperSwitch" IsOn="False" Toggled="DeveloperSwitch_Toggled"/>
+            </ui:SettingsCard>
+
+            <!--关于-->
+            <TextBlock Text="关于" Style="{StaticResource BodyStrongTextBlockStyle}" Margin="1,30,0,6"/>
+
+            <ui:SettingsExpander Header="StockTill" Description="© St7530 2025. All rights reserved.">
+                <ui:SettingsExpander.HeaderIcon>
+                    <Image Source="/Assets/StockTill.png"
+                            Width="20" Height="20" RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <!--<ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.AppIconDefault}"/>-->
+                </ui:SettingsExpander.HeaderIcon>
+                <TextBlock x:Name="VersionBlock" Foreground="{DynamicResource {x:Static ui:ThemeKeys.TextFillColorSecondaryBrushKey}}" Loaded="VersionBlock_Loaded" />
+                <ui:SettingsExpander.Items>
+                    <ui:SettingsCard HorizontalContentAlignment="Left" ContentAlignment="Left">
+                        <StackPanel Margin="-12,0,0,0" Orientation="Vertical">
+                            <TextBlock Margin="12,6,0,5" Text="Dependencies &amp; references" />
+                            <StackPanel Margin="0,10,0,0">
+                                <ui:HyperlinkButton Content="iNKORE.UI.WPF.Modern" NavigateUri="https://github.com/iNKORE-NET/UI.WPF.Modern"/>
+                                <ui:HyperlinkButton Content="PropertyChanged.Fody" NavigateUri="https://github.com/Fody/PropertyChanged" />
+                                <ui:HyperlinkButton Content="Newtonsoft.Json" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json" />
+                                <ui:HyperlinkButton Content="AutoUpdater.NET" NavigateUri="https://github.com/ravibpatel/AutoUpdater.NET" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </ui:SettingsCard>
-            </ui:SettingsExpander.Items>
-        </ui:SettingsExpander>
-        <ui:HyperlinkButton Content="GitHub 仓库主页" Margin="0,8,0,0" NavigateUri="https://github.com/St7530/StockTill"/>
-    </StackPanel>
+                    </ui:SettingsCard>
+                </ui:SettingsExpander.Items>
+            </ui:SettingsExpander>
+            
+            <ui:HyperlinkButton Content="GitHub 仓库主页" Margin="0,8,0,0" NavigateUri="https://github.com/St7530/StockTill"/>
+        </StackPanel>
+    </ui:ScrollViewerEx>
 </ui:Page>

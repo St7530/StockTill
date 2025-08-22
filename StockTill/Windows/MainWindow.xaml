@@ -8,8 +8,8 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
         mc:Ignorable="d"
-        Title="StockTill" Height="700" Width="1100">
-
+        Title="StockTill" Height="700" Width="1100"
+        Icon="/Assets/StockTill.png">
     <ui:NavigationView x:Name="NavigationView_Root" IsPaneOpen="False" IsBackButtonVisible="Collapsed"
                        SelectionChanged="NavigationView_SelectionChanged">
 
@@ -49,7 +49,7 @@
 
         </ui:NavigationView.FooterMenuItems>
         
-        <ui:Frame x:Name="Frame_Main" Margin="56,36,56,36"/>
+        <ui:Frame x:Name="RootFrame" />
 
     </ui:NavigationView>
 </Window>

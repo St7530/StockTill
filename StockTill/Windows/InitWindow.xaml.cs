@@ -1,19 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Windows;
 using StockTill.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace StockTill
@@ -27,9 +13,22 @@ namespace StockTill
         {
             InitializeComponent();
 
-            InitialzeSql();
+            ThemeHelper.LoadTheme();
+            CheckForUpdate();
         }
 
+        private async void CheckForUpdate()
+        {
+            await Task.Delay(1);
+
+            if (bool.Parse(ConfigHelper.Configuration["Update:IsAutoCheckForUpdate"]) == true)
+            {
+                InitBlock.Text = "正在检查更新";
+                await Task.Delay(1000);
+                UpdateHelper.CheckForUpdateOnStartup();
+            }
+            InitialzeSql();
+        }
         private async void InitialzeSql()
         {
             await Task.Delay(1);
@@ -37,7 +36,7 @@ namespace StockTill
             try
             {
                 InitBlock.Text = "正在连接数据库";
-                if (await SqlHelper.Instance.ConnectAsync())
+                if (await SqlHelper.ConnectAsync())
                 {
                     InitBlock.Text = "欢迎使用 StockTill";
                     await Task.Delay(1000);
@@ -45,16 +44,28 @@ namespace StockTill
                     this.Close();
                 }
                 else
-                {  //数据库中不存在所需的表。此时应创建
+                { //数据库连接成功，但未初始化
                     InitBlock.Text = "正在初始化数据库";
-                    SqlHelper.Instance.Initialize();
+                    SqlHelper.Initialize();
                     InitialzeSql();
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "无法连接到数据库", MessageBoxButton.OK, MessageBoxImage.Hand);
-                Application.Current.Shutdown();
+                if (MessageBox.Show(
+                    "数据库可能尚未安装或启动，或者连接字符串设置有误。\n" +
+                    "请检查数据库服务是否正常，以及 StockTill 设置的连接字符串是否正确。\n\n" +
+                    "错误信息："+ ex.Message+ "\n\n" +
+                    "是否要退出 StockTill ？",
+                    "无法连接到数据库", MessageBoxButton.YesNo, MessageBoxImage.Hand) == MessageBoxResult.Yes)
+                {
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    new MainWindow(false).Show();
+                    this.Close();
+                }
             }
         }
     }

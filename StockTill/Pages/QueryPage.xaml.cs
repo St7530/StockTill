@@ -1,20 +1,7 @@
 ﻿using PropertyChanged;
-using StockTill.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using StockTill.Helpers;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace StockTill.Pages
@@ -28,17 +15,20 @@ namespace StockTill.Pages
         public decimal Cost { get; set; } = 0;
         public decimal Price { get; set; } = 0;
         public decimal Profit { get; set; } = 0;
+        public string CountText { get; set; } = string.Empty;
 
         public QueryPage()
         {
             InitializeComponent();
             DataContext = this;
         }
+
         private void QueryGrid_Loaded(object sender, RoutedEventArgs e)
         {
             Cost = 0;
             Price = 0;
             Profit = 0;
+            CountText = string.Empty;
             DataTable data = new DataTable();
 
             data.Columns.Add("商品编号");
@@ -49,7 +39,6 @@ namespace StockTill.Pages
             data.Columns.Add("小计", typeof(decimal), "数量 * 单件金额");
             data.Columns.Add("操作时间");
 
-            // 2. 绑定到 DataGrid（建议使用 ObservableCollection 替代 DataTable）
             QueryGrid.ItemsSource = data.DefaultView;
         }
 
@@ -72,7 +61,7 @@ namespace StockTill.Pages
                     break;
             }
 
-            DataTable data = SqlHelper.Instance.SelectLog(isTill, startDate, endDate);
+            DataTable data = SqlHelper.SelectLog(isTill, startDate, endDate);
             data.Columns["id"].ColumnName = "商品编号";
             data.Columns["name"].ColumnName = "商品名称";
             data.Columns["operation"].ColumnName = "操作";
@@ -81,6 +70,7 @@ namespace StockTill.Pages
             data.Columns.Add("小计", typeof(decimal), "数量 * 单件金额").SetOrdinal(5);
             data.Columns["time"].ColumnName = "操作时间";
 
+            CountText = $"共 {data.Rows.Count} 条结果";
             QueryGrid.ItemsSource = data.DefaultView;
 
             // 计算总成本、总售价、总盈利
@@ -99,13 +89,12 @@ namespace StockTill.Pages
             try
             {
                 Profit = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
-                NotFoundBlock.Visibility = Visibility.Collapsed;
             }
             catch (Exception)
             { // 找不到结果
-                NotFoundBlock.Visibility = Visibility.Visible;
+                CountText = "找不到结果";
             }
-            
+
         }
     }
 }

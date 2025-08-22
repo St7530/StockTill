@@ -1,21 +1,9 @@
 ﻿using PropertyChanged;
-using StockTill.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using StockTill.Helpers;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
@@ -29,6 +17,8 @@ namespace StockTill.Pages
     {
         DataTable data = new DataTable();
         public decimal TotalPrice { get; set; } = 0;
+        public string CountText { get; set; } = string.Empty;
+
         public TillPage()
         {
             InitializeComponent();
@@ -38,6 +28,7 @@ namespace StockTill.Pages
         private void InitData()
         {
             TotalPrice = 0;
+            CountText = string.Empty;
             data.Clear();
             data.Columns.Clear();
 
@@ -58,6 +49,7 @@ namespace StockTill.Pages
                 }
             }
         }
+
         private bool UpdateTill(string id, int quantity)
         {
             DataRow[] foundRows = data.Select($"商品编号 = '{id}'");
@@ -65,7 +57,7 @@ namespace StockTill.Pages
             if (foundRows.Length > 0)
             { // 商品已经存在，需要对其进行数量自增
                 DataRow foundRow = foundRows[0];
-                DataRow row = SqlHelper.Instance.SelectById(id);
+                DataRow row = SqlHelper.SelectById(id);
                 if ((int)row["quantity"] >= (int)foundRow["数量"] + quantity)
                 { // 商品库存数量足够
                     foundRow["数量"] = (int)foundRow["数量"] + quantity;
@@ -78,9 +70,9 @@ namespace StockTill.Pages
             }
             else
             { // 商品尚未存在，需要创建新列
-                if (SqlHelper.Instance.SelectById(id) != null)
+                if (SqlHelper.SelectById(id) != null)
                 { // 库存中有该商品
-                    DataRow? row = SqlHelper.Instance.SelectById(id);
+                    DataRow? row = SqlHelper.SelectById(id);
 
                     if (row != null)
                     {
@@ -108,12 +100,15 @@ namespace StockTill.Pages
             }
 
             TotalPrice = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
+            CountText = $"共 {data.Compute("SUM(数量)", "")} 件商品";
             return true;
         }
+
         private void IdBox_Loaded(object sender, RoutedEventArgs e)
         {
             IdBox.Focus(); // 自动获得焦点
         }
+
         private void IdBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter && IdBox.Text != "")
@@ -122,14 +117,17 @@ namespace StockTill.Pages
                 IdBox.Text = "";
             }
         }
+
         private void EraseButton_Click(object sender, RoutedEventArgs e)
         {
             InitData();
         }
+
         private void TillGrid_Loaded(object sender, RoutedEventArgs e)
         {
             InitData();
         }
+
         private void TillGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             if (e.Row.Item is DataRowView rowView)
@@ -137,24 +135,30 @@ namespace StockTill.Pages
                 string id = (string)rowView["商品编号"];
                 int oldQuantity = (int)rowView["数量"];
                 var textBox = e.EditingElement as TextBox;
-                if (int.TryParse(textBox?.Text, out int newQuantity))
-                {
+                string input = textBox?.Text.Trim();
+                if (string.IsNullOrWhiteSpace(input))
+                { // 数量为空
+                    MessageBox.Show("请输入正整数。", "数量无效", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    e.Cancel = true;
+                }
+                else if (int.TryParse(input, out int newQuantity))
+                { // 数量为整数
                     if (!UpdateTill(id, newQuantity-oldQuantity))
-                    {
-                        //MessageBox.Show("请输入正整数。", "数量无效", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    { // 更新失败
                         e.Cancel = true;
                     }
                 }
             }
         }
+
         private void TillButton_Click(object sender, RoutedEventArgs e)
         {
             foreach (DataRow row in data.Rows)
             {
                 string id = row["商品编号"].ToString();
                 int quantity = (int)row["数量"];
-                SqlHelper.Instance.InsertLog(id, true, quantity);
-                SqlHelper.Instance.ReduceQuantityById(id, quantity);
+                SqlHelper.InsertLog(id, true, quantity);
+                SqlHelper.ReduceQuantityById(id, quantity);
             }
             data.Clear();
             TotalPrice = 0;

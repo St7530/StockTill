@@ -1,38 +1,32 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Page = iNKORE.UI.WPF.Modern.Controls.Page;
+using PropertyChanged;
 using StockTill.Controls;
 using StockTill.Helpers;
 using System.Data;
+using System.Windows;
+using System.Windows.Controls;
+using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace StockTill.Pages
 {
     /// <summary>
     /// StockPage.xaml 的交互逻辑
     /// </summary>
+    [AddINotifyPropertyChangedInterface]
     public partial class StockPage : Page
     {
         private DataView _dataView; // 保存 DataView，用于设置 Filter
+        public string CountText { get; set; } = string.Empty;
+
         public StockPage()
         {
             InitializeComponent();
+            DataContext = this;
         }
+
         private void LoadData()
         {
-            DataTable data = SqlHelper.Instance.SelectAll();
+            DataTable data = SqlHelper.SelectAll();
             data.Columns["id"].ColumnName = "商品编号";
             data.Columns["name"].ColumnName = "商品名称";
             data.Columns["quantity"].ColumnName = "库存数量";
@@ -42,9 +36,10 @@ namespace StockTill.Pages
             // 保存 DataView
             _dataView = data.DefaultView;
 
-            // 绑定到 StockGrid
+            CountText = (_dataView.Count > 0) ? $"共 {_dataView.Count} 个商品" : "找不到商品";
             StockGrid.ItemsSource = _dataView;
         }
+
         private async void AddButton_Click(object sender, RoutedEventArgs e)
         {
             AddDialog dialog = new AddDialog();
@@ -53,6 +48,7 @@ namespace StockTill.Pages
                 LoadData();
             }
         }
+
         private async void EditButton_Click(object sender, RoutedEventArgs e)
         {
             var row = ((DataRowView)StockGrid.SelectedItems[0]).Row;
@@ -68,6 +64,7 @@ namespace StockTill.Pages
                 LoadData();
             }
         }
+
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
             foreach (DataRowView rowView in StockGrid.SelectedItems)
@@ -75,21 +72,21 @@ namespace StockTill.Pages
                 var row = rowView.Row;
                 string id = (string)row["商品编号"];
 
-                SqlHelper.Instance.DeleteById(id);
+                SqlHelper.DeleteById(id);
             }
 
-            DeleteFlyout.Hide();
+            DropDBFlyout.Hide();
             LoadData();
         }
+
         private void SearchBox_Loaded(object sender, RoutedEventArgs e)
         {
             SearchBox.Focus(); // 自动获取焦点
         }
+
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (_dataView == null) return;
-
-            string keyword = SearchBox.Text.Trim();
+            string keyword = SearchBox.Text;
 
             if (string.IsNullOrEmpty(keyword))
             { // 清空筛选
@@ -102,11 +99,15 @@ namespace StockTill.Pages
             商品编号 LIKE '%{keyword}%' OR
             商品名称 LIKE '%{keyword}%'";
             }
+
+            CountText = (_dataView.Count > 0) ? $"共 {_dataView.Count} 个商品" : "找不到商品";
         }
+
         private void StockGrid_Loaded(object sender, RoutedEventArgs e)
         {
             LoadData();
         }
+
         private void StockGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EditButton.IsEnabled = StockGrid.SelectedItems.Count == 1;

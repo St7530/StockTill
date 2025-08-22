@@ -8,7 +8,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="统计查询">
-    <Grid>
+    <Grid Margin="56,36,56,36">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -22,12 +22,12 @@
             <DatePicker x:Name="StartPicker" ui:ControlHelper.Header="开始日期" IsTodayHighlighted="True" Width="130" VerticalAlignment="Bottom" Margin="0,0,8,0" />
             <DatePicker x:Name="EndPicker" ui:ControlHelper.Header="结束日期" IsTodayHighlighted="True" Width="130" VerticalAlignment="Bottom" Margin="0,0,8,0" />
             <ComboBox x:Name="OperationCombo" ui:ControlHelper.Header="选择操作" SelectedIndex="2" Width="130" VerticalAlignment="Bottom" Margin="0,0,8,0">
-                <ComboBoxItem Content="入库"/>
-                <ComboBoxItem Content="出库"/>
-                <ComboBoxItem Content="入库 &amp; 出库"/>
+                <ComboBoxItem Content="入库" />
+                <ComboBoxItem Content="出库" />
+                <ComboBoxItem Content="入库 &amp; 出库" />
             </ComboBox>
             <Button x:Name="QueryButton" Content="查询" Style="{DynamicResource {x:Static ui:ThemeKeys.AccentButtonStyleKey}}" VerticalAlignment="Bottom" Click="QueryButton_Click" Margin="0,0,8,0" />
-            <TextBlock x:Name="NotFoundBlock" Grid.Row="0" VerticalAlignment="Bottom" Height="24" Visibility="Collapsed">找不到结果。</TextBlock>
+            <TextBlock Text="{Binding CountText, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Bottom" Height="24" />
         </StackPanel>
         <DataGrid Grid.Row="2" x:Name="QueryGrid" Loaded="QueryGrid_Loaded" IsReadOnly="True" />
         <StackPanel Grid.Row="3" Orientation="Horizontal">

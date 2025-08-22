@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:StockTill"
         xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
         WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
         ui:TitleBar.ExtendViewIntoTitleBar="True"
         ui:WindowHelper.UseModernWindowStyle="True"
         ui:WindowHelper.SystemBackdropType="Mica"
@@ -23,21 +24,21 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
-        <!--<Image
+        <Image
             x:Name="extendedSplashImage"
             Grid.Row="1"
             Grid.Column="1"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             RenderOptions.BitmapScalingMode="HighQuality"
-            Source="/iNKORE.UI.WPF.Modern.Gallery;component/Assets/WpfLibrary_256w.png">
-            <FrameworkElement.RenderTransform>
+            Source="/Assets/StockTill.png">
+            <!--<FrameworkElement.RenderTransform>
                 <TranslateTransform X="-10"/>
-            </FrameworkElement.RenderTransform>
-        </Image>-->
-        <ui:FontIcon Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="{x:Static ui:SegoeFluentIcons.AppIconDefault}"/>
+            </FrameworkElement.RenderTransform>-->
+        </Image>
+        <!--<ui:FontIcon Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Icon="{x:Static ui:SegoeFluentIcons.AppIconDefault}"/>-->
         <StackPanel Grid.Row="2" Grid.Column="1" >
-            <ui:ProgressRing HorizontalAlignment="Center" Margin="24"/>
+            <ui:ProgressRing HorizontalAlignment="Center" Margin="26"/>
             <TextBlock x:Name="InitBlock" HorizontalAlignment="Center" FontSize="18" />
         </StackPanel>
     </Grid>

@@ -7,20 +7,36 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+    <ApplicationIcon>Assets\StockTill.ico</ApplicationIcon>
+	<AssemblyVersion>0.0.1.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Assets\Scanner.png" />
+    <None Remove="Assets\StockTill.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Assets\StockTill.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autoupdater.NET.Official" Version="1.9.2" />
     <PackageReference Include="iNKORE.UI.WPF" Version="1.2.8" />
     <PackageReference Include="iNKORE.UI.WPF.Modern" Version="0.10.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Controls\UpdateURLDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Controls\ConnectionStringDialog.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Controls\EditDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -28,6 +44,7 @@
 
   <ItemGroup>
     <Resource Include="Assets\Scanner.png" />
+    <Resource Include="Assets\StockTill.png" />
   </ItemGroup>
 
 </Project>

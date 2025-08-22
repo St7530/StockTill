@@ -1,16 +1,6 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
-using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace StockTill
@@ -26,18 +16,14 @@ namespace StockTill
         public Pages.DeveloperPage Page_Developer = new Pages.DeveloperPage();
         public Pages.SettingsPage Page_Settings = new Pages.SettingsPage();
         //public Pages.WelcomePage Page_Welcome = new Pages.WelcomePage();
-        public MainWindow()
+        public MainWindow(bool isInitSuccess = true)
         {
             InitializeComponent();
 
-            NavigationView_Root.SelectedItem = NavigationViewItem_Till;
-            NavigationView_Root.Header = Page_Till.Title;
-            Frame_Main.Navigate(Page_Till);
+            NavigateTo(isInitSuccess ? NavigationViewItem_Till : NavigationViewItem_Settings);
         }
-
-        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        public void NavigateTo(NavigationViewItem item)
         {
-            var item = sender.SelectedItem;
             Page? page = item switch
             {
                 var i when i == NavigationViewItem_Till => Page_Till,
@@ -50,10 +36,14 @@ namespace StockTill
 
             if (page != null)
             {
+                NavigationView_Root.SelectedItem = item;
                 NavigationView_Root.Header = page.Title;
-                Frame_Main.Navigate(page);
+                RootFrame.Navigate(page);
             }
-
+        }
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
+        {
+            NavigateTo((NavigationViewItem)sender.SelectedItem);
         }
         public void SetDeveloperPageVisibility(Visibility visibility)
         {
