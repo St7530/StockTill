@@ -75,7 +75,7 @@ namespace StockTill.Pages
                 SqlHelper.DeleteById(id);
             }
 
-            DropDBFlyout.Hide();
+            DeleteFlyout.Hide();
             LoadData();
         }
 

@@ -20,13 +20,27 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,12">
-            <Button x:Name="AddButton" Content="新增商品" Click="AddButton_Click" />
-            <Button x:Name="EditButton" Content="编辑选中" IsEnabled="False" Click="EditButton_Click" />
-            <Button x:Name="DeleteButton" Content="删除选中" IsEnabled="False">
+            <Button x:Name="AddButton" Click="AddButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Add}" />
+                    <TextBlock Text=" 新增商品" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="EditButton" IsEnabled="False" Click="EditButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Edit}" />
+                    <TextBlock Text=" 编辑选中" />
+                </StackPanel>
+            </Button>
+            <Button x:Name="DeleteButton" IsEnabled="False">
+                <StackPanel Orientation="Horizontal">
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Delete}" />
+                    <TextBlock Text=" 删除选中" />
+                </StackPanel>
                 <ui:FlyoutService.Flyout>
-                    <ui:Flyout x:Name="DropDBFlyout" Placement="TopEdgeAlignedLeft">
+                    <ui:Flyout x:Name="DeleteFlyout" Placement="TopEdgeAlignedLeft">
                         <StackPanel>
-                            <TextBlock Text="确认要删除选中的商品吗？此操作无法恢复。" Margin="0,0,0,12" />
+                            <TextBlock Text="确认要删除选中的商品吗？其操作记录将被一并清空。" Margin="0,0,0,12" />
                             <Button Content="删除" Click="DeleteButton_Click" />
                         </StackPanel>
                     </ui:Flyout>

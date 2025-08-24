@@ -35,7 +35,7 @@ namespace StockTill.Controls
             this.quantity = quantity;
             this.cost = cost;
             this.price = price;
-            BarcodeImage.Source = BarcodeHelper.GenerateBarcode(Id);
+            BarcodeImage.Source = BarcodeHelper.GenerateBarcodeSource(Id);
         }
         private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
@@ -49,5 +49,10 @@ namespace StockTill.Controls
                 SqlHelper.InsertLog(id, true, formerQuantity - quantity);
             }
 		}
+
+        private void SaveBarcodeButton_Click(object sender, RoutedEventArgs e)
+        {
+            BarcodeHelper.SaveBarcode(Id, name);
+        }
     }
 }

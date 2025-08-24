@@ -75,9 +75,10 @@
                             <TextBlock Margin="12,6,0,5" Text="Dependencies &amp; references" />
                             <StackPanel Margin="0,10,0,0">
                                 <ui:HyperlinkButton Content="iNKORE.UI.WPF.Modern" NavigateUri="https://github.com/iNKORE-NET/UI.WPF.Modern"/>
-                                <ui:HyperlinkButton Content="PropertyChanged.Fody" NavigateUri="https://github.com/Fody/PropertyChanged" />
                                 <ui:HyperlinkButton Content="Newtonsoft.Json" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json" />
                                 <ui:HyperlinkButton Content="AutoUpdater.NET" NavigateUri="https://github.com/ravibpatel/AutoUpdater.NET" />
+                                <ui:HyperlinkButton Content="PropertyChanged.Fody" NavigateUri="https://github.com/Fody/PropertyChanged" />
+                                <ui:HyperlinkButton Content="ZXing.Net.Bindings.Windows.Compatibility" NavigateUri="https://www.nuget.org/packages/ZXing.Net.Bindings.Windows.Compatibility" />
                             </StackPanel>
                         </StackPanel>
                     </ui:SettingsCard>

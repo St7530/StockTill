@@ -18,7 +18,10 @@ namespace StockTill.Helpers
         static UpdateHelper()
         {
             AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
-            AutoUpdater.HttpUserAgent = $"StockTill/{Assembly.GetExecutingAssembly().GetName().Version}";
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            version = version.Substring(0, version.Length - 2);
+            AutoUpdater.InstalledVersion = new Version(version);
+            AutoUpdater.HttpUserAgent = $"StockTill/{version}";
         }
         public static void CheckForUpdateOnStartup()
         {
@@ -39,7 +42,7 @@ namespace StockTill.Helpers
                     if (MessageBox.Show(
                         $"发现新版本：{args.CurrentVersion}\n" +
                         $"当前版本：{args.InstalledVersion}\n" +
-                        $"是否更新？",
+                        "是否更新？",
                         "StockTill 更新",
                         MessageBoxButton.YesNo, MessageBoxImage.Asterisk) == MessageBoxResult.Yes)
                     { // 更新
@@ -60,7 +63,10 @@ namespace StockTill.Helpers
                 else
                 { // 暂无新版本
                     if(!IsOnStartup)
-                        MessageBox.Show("当前版本已是最新。", "StockTill 更新", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                        MessageBox.Show(
+                            "您使用的是最新版本。\n" +
+                            $"当前版本：{args.InstalledVersion}",
+                            "StockTill 更新", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                 }
             }
             else
@@ -68,7 +74,8 @@ namespace StockTill.Helpers
                 if (!IsOnStartup)
                     MessageBox.Show(
                     "无法连接至更新服务器。\n" +
-                    "错误信息：" + args.Error.Message,
+                    "请检查您的网络连接，以及 StockTill 设置的更新服务器是否正确。\n\n" +
+                    $"错误信息：{args.Error.Message}",
                     "StockTill 更新", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }

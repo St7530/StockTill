@@ -55,7 +55,7 @@ namespace StockTill
                 if (MessageBox.Show(
                     "数据库可能尚未安装或启动，或者连接字符串设置有误。\n" +
                     "请检查数据库服务是否正常，以及 StockTill 设置的连接字符串是否正确。\n\n" +
-                    "错误信息："+ ex.Message+ "\n\n" +
+                    $"错误信息：{ex.Message}\n\n" +
                     "是否要退出 StockTill ？",
                     "无法连接到数据库", MessageBoxButton.YesNo, MessageBoxImage.Hand) == MessageBoxResult.Yes)
                 {

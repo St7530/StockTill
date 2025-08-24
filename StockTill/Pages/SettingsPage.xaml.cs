@@ -82,7 +82,9 @@ namespace StockTill.Pages
 
         private void VersionBlock_Loaded(object sender, RoutedEventArgs e)
         {
-            VersionBlock.Text = $"{Assembly.GetExecutingAssembly().GetName().Version}";
+            string version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            version = version.Substring(0, version.Length - 2);
+            VersionBlock.Text = version;
         }
     }
 }
