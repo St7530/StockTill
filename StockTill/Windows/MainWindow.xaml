@@ -9,7 +9,7 @@
         ui:WindowHelper.SystemBackdropType="Mica"
         mc:Ignorable="d"
         Title="StockTill" Height="700" Width="1100"
-        Icon="/Assets/StockTill.png">
+        WindowState="Maximized">
     <ui:NavigationView x:Name="NavigationView_Root" IsPaneOpen="False" IsBackButtonVisible="Collapsed"
                        SelectionChanged="NavigationView_SelectionChanged">
 

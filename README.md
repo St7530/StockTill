@@ -5,15 +5,20 @@
 ## 安装
 
 1. 下载并安装 SQL Server 2022 Express：https://www.microsoft.com/zh-cn/sql-server/sql-server-downloads
-2. 下载并安装 StockTill：https://github.com/St7530/StockTill/releases
+2. 使用 Navicat 等工具创建名为 `StockTillDB` 的数据库
+3. 下载并安装 StockTill：https://github.com/St7530/StockTill/releases
+
    请确保您有 .NET 8.0 运行环境。
 
 ## 引用
 
 [iNKORE.UI.WPF.Modern](https://github.com/iNKORE-NET/UI.WPF.Modern)
 
-[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged)
-
 [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json)
 
 [AutoUpdater.NET](https://github.com/ravibpatel/AutoUpdater.NET)
+
+[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged)
+
+[ZXing.Net.Bindings.Windows.Compatibility](https://www.nuget.org/packages/ZXing.Net.Bindings.Windows.Compatibility)
+

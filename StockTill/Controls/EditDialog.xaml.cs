@@ -1,7 +1,8 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
+using Newtonsoft.Json.Linq;
 using PropertyChanged;
-using System.Windows;
 using StockTill.Helpers;
+using System.Windows;
 
 namespace StockTill.Controls
 {
@@ -34,6 +35,7 @@ namespace StockTill.Controls
             this.quantity = quantity;
             this.cost = cost;
             this.price = price;
+            BarcodeImage.Source = BarcodeHelper.GenerateBarcode(Id);
         }
         private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {

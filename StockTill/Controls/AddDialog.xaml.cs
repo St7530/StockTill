@@ -17,6 +17,7 @@ namespace StockTill.Controls
             {
                 id = value;
                 IsPrimaryButtonEnabled = !string.IsNullOrWhiteSpace(value);
+                BarcodeImage.Source = string.IsNullOrWhiteSpace(value) ? null : BarcodeHelper.GenerateBarcode(value);
             }
         }
         public string name { get; set; } = string.Empty;
