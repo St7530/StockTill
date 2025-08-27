@@ -17,24 +17,35 @@
             <Bold>提示：</Bold>商品编号无法被修改。<LineBreak/>
             对库存数量的修改也会被计为商品入库和出库。
         </TextBlock>
-        <TextBox ui:ControlHelper.Header="商品编号" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Margin="0,0,0,8" />
-        <Grid Height="50" Margin="0,0,0,16">
+        <TextBox ui:ControlHelper.Header="商品名称" Text="{Binding name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" />
+        <Grid Margin="0,0,0,16">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="120" />
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Image x:Name="BarcodeImage" Grid.Column="0" Width="180" Height="50" />
-            <Button x:Name="SaveBarcodeButton" Grid.Column="1" Click="SaveBarcodeButton_Click" Width="120" Height="30">
+            <ComboBox ui:ControlHelper.Header="商品分类" Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Categories, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="category" SelectedValuePath="category_id" SelectedValue="{Binding CategoryId, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,12,16" />
+            <ui:NumberBox Header="库存数量" Grid.Row="0" Grid.Column="1" Value="{Binding quantity, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="12,0,0,16" />
+            <ui:NumberBox Header="单件成本（元）" Grid.Row="1" Grid.Column="0" Value="{Binding cost, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,12,0" />
+            <ui:NumberBox Header="单件售价（元）" Grid.Row="1" Grid.Column="1" Value="{Binding price, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="12,0,0,0" />
+        </Grid>
+        <Grid Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox ui:ControlHelper.Header="商品编号" Grid.Column="0" Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,8,0" />
+            <Button x:Name="SaveBarcodeButton" Grid.Column="1" IsEnabled="False" Click="SaveBarcodeButton_Click" VerticalAlignment="Bottom" Width="120" Height="30">
                 <StackPanel Orientation="Horizontal">
                     <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Save}"/>
                     <TextBlock Text=" 保存条形码"/>
                 </StackPanel>
             </Button>
         </Grid>
-        <TextBox ui:ControlHelper.Header="商品名称" Text="{Binding name, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,16" />
-        <ui:NumberBox Header="库存数量" Value="{Binding quantity, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,0,16" />
-        <ui:NumberBox Header="单件成本" Value="{Binding cost, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" Margin="0,0,0,16" />
-        <ui:NumberBox Header="单件售价" Value="{Binding price, UpdateSourceTrigger=PropertyChanged}" Minimum="0" SpinButtonPlacementMode="Inline" />
+        <Image x:Name="BarcodeImage" Grid.Column="0" Width="360" Height="100" />
         <ui:ProgressBar x:Name="DialogProgress" IsIndeterminate="True" Visibility="Collapsed" Margin="0,24,0,0" />
     </StackPanel>
 </ui:ContentDialog>

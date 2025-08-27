@@ -14,7 +14,7 @@
                        SelectionChanged="NavigationView_SelectionChanged">
 
         <ui:NavigationView.MenuItems>
-            <ui:NavigationViewItem x:Name="NavigationViewItem_Till" Content="扫码出库">
+            <ui:NavigationViewItem x:Name="NavigationViewItem_Till" Content="收银出库">
                 <ui:NavigationViewItem.Icon>
                     <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.BarcodeScanner}"/>
                 </ui:NavigationViewItem.Icon>
@@ -23,6 +23,12 @@
             <ui:NavigationViewItem x:Name="NavigationViewItem_Stock" Content="库存管理">
                 <ui:NavigationViewItem.Icon>
                     <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Library}"/>
+                </ui:NavigationViewItem.Icon>
+            </ui:NavigationViewItem>
+            
+            <ui:NavigationViewItem x:Name="NavigationViewItem_Categories" Content="商品分类管理">
+                <ui:NavigationViewItem.Icon>
+                    <ui:FontIcon Icon="{x:Static ui:SegoeFluentIcons.Package}"/>
                 </ui:NavigationViewItem.Icon>
             </ui:NavigationViewItem>
 

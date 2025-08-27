@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Configuration;
 using System.Data;
+using System.Windows;
 using DateTimeOffset = System.DateTimeOffset;
 
 namespace StockTill.Helpers
@@ -18,16 +18,17 @@ namespace StockTill.Helpers
         public static void Initialize()
         {
             string initSql = @"
--- 1. 创建 Schema（如果不存在）
+-- 1. 创建 StockTillSchema 模式
 IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = 'StockTillSchema')
     EXEC('CREATE SCHEMA [StockTillSchema]');
 
--- 2. 创建 Goods 表（如果不存在）
+-- 2. 创建 Goods 表
 IF NOT EXISTS (SELECT * FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id WHERE t.name = 'Goods' AND s.name = 'StockTillSchema')
 BEGIN
     CREATE TABLE [StockTillSchema].[Goods] (
         [id] varchar(255) NOT NULL,
         [name] varchar(255) COLLATE Chinese_PRC_CI_AS NULL,
+        [category_id] int NULL,
         [quantity] int NOT NULL,
         [cost] decimal(18,2) NOT NULL,
         [price] decimal(18,2) NOT NULL,
@@ -35,17 +36,35 @@ BEGIN
     );
 END
 
--- 3. 添加 Goods 表的描述（如果尚未设置）
+-- 3. 添加 Goods 表的描述
 IF NOT EXISTS (SELECT * FROM fn_listextendedproperty(N'MS_Description', N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'id'))
 BEGIN
     EXEC sp_addextendedproperty N'MS_Description', N'商品编号',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'id';
     EXEC sp_addextendedproperty N'MS_Description', N'商品名称',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'name';
+    EXEC sp_addextendedproperty N'MS_Description', N'分类编号',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'category_id';
     EXEC sp_addextendedproperty N'MS_Description', N'库存数量',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'quantity';
     EXEC sp_addextendedproperty N'MS_Description', N'单件成本',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'cost';
     EXEC sp_addextendedproperty N'MS_Description', N'单件售价',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Goods', N'COLUMN', N'price';
 END
 
--- 4. 创建 OperationLog 表（如果不存在）
+-- 4. 创建 Categories 表
+IF NOT EXISTS (SELECT * FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id WHERE t.name = 'Categories' AND s.name = 'StockTillSchema')
+BEGIN
+    CREATE TABLE [StockTillSchema].[Categories] (
+      [category_id] int IDENTITY(1,1) NOT NULL,
+      [category] varchar(255) COLLATE Chinese_PRC_CI_AS NULL,
+      PRIMARY KEY CLUSTERED ([category_id])
+    )
+END
+
+-- 5. 添加 Categories 表的描述
+IF NOT EXISTS (SELECT * FROM fn_listextendedproperty(N'MS_Description', N'SCHEMA', N'StockTillSchema', N'TABLE', N'Categories', N'COLUMN', N'category_id'))
+BEGIN
+    EXEC sp_addextendedproperty N'MS_Description', N'分类编号',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Categories', N'COLUMN', N'category_id';
+    EXEC sp_addextendedproperty N'MS_Description', N'商品分类',           N'SCHEMA', N'StockTillSchema', N'TABLE', N'Categories', N'COLUMN', N'category';
+END
+
+-- 6. 创建 OperationLog 表
 IF NOT EXISTS (SELECT * FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id WHERE t.name = 'OperationLog' AND s.name = 'StockTillSchema')
 BEGIN
     CREATE TABLE [StockTillSchema].[OperationLog] (
@@ -56,7 +75,7 @@ BEGIN
     );
 END
 
--- 5. 添加 OperationLog 表的描述（如果尚未设置）
+-- 7. 添加 OperationLog 表的描述
 IF NOT EXISTS (SELECT * FROM fn_listextendedproperty(N'MS_Description', N'SCHEMA', N'StockTillSchema', N'TABLE', N'OperationLog', N'COLUMN', N'id'))
 BEGIN
     EXEC sp_addextendedproperty N'MS_Description', N'商品编码',               N'SCHEMA', N'StockTillSchema', N'TABLE', N'OperationLog', N'COLUMN', N'id';
@@ -64,51 +83,71 @@ BEGIN
     EXEC sp_addextendedproperty N'MS_Description', N'数量',                   N'SCHEMA', N'StockTillSchema', N'TABLE', N'OperationLog', N'COLUMN', N'quantity';
     EXEC sp_addextendedproperty N'MS_Description', N'操作时间',               N'SCHEMA', N'StockTillSchema', N'TABLE', N'OperationLog', N'COLUMN', N'time';
 END
-
--- 6. 设置 LOCK_ESCALATION（仅当表存在时）
-IF EXISTS (SELECT * FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id WHERE t.name = 'Goods' AND s.name = 'StockTillSchema')
-BEGIN
-    ALTER TABLE [StockTillSchema].[Goods] SET (LOCK_ESCALATION = TABLE);
-END
 ";
 
             ExecuteNonQuery(initSql);
         }
         public static DataTable SelectAll()
         {
-            string sql = "SELECT * FROM StockTillSchema.Goods";
+            string sql = """     
+                SELECT
+                  id,
+                  name,
+                  category,
+                  quantity,
+                  cost,
+                  price
+                FROM
+                  StockTillSchema.Goods
+                  INNER JOIN StockTillSchema.Categories ON Goods.category_id = Categories.category_id
+                """;
             return ExecuteQuery(sql);
         }
         public static DataRow? SelectById(string id)
         {
-            string sql = "SELECT * FROM StockTillSchema.Goods WHERE id = @id";
+            string sql = """     
+                SELECT
+                  id,
+                  name,
+                  category,
+                  quantity,
+                  cost,
+                  price
+                FROM
+                  StockTillSchema.Goods
+                  INNER JOIN StockTillSchema.Categories ON Goods.category_id = Categories.category_id
+                WHERE
+                  id = @id
+                """;
             var dataTable = ExecuteQuery(sql, new SqlParameter("@id", id));
             return dataTable.Rows.Count > 0 ? dataTable.Rows[0] : null;
         }
-        public static void Insert(string id, string name, int quantity, decimal cost, decimal price)
+        public static void Insert(string id, string name, int category_id, int quantity, decimal cost, decimal price)
         {
             string sql = """
-                INSERT INTO StockTillSchema.Goods (id, name, quantity, cost, price)
-                VALUES (@id, @name, @quantity, @cost, @price)
+                INSERT INTO StockTillSchema.Goods (id, name, category_id, quantity, cost, price)
+                VALUES (@id, @name, @category_id, @quantity, @cost, @price)
                 """;
             ExecuteNonQuery(sql, [
                 new SqlParameter("@id", id),
                 new SqlParameter("@name", name),
+                new SqlParameter("@category_id", category_id),
                 new SqlParameter("@quantity", quantity),
                 new SqlParameter("@cost", cost),
                 new SqlParameter("@price", price)
             ]);
         }
-        public static void UpdateById(string id, string name, int quantity, decimal cost, decimal price)
+        public static void UpdateById(string id, string name, int category_id, int quantity, decimal cost, decimal price)
         {
             string sql = """
                 UPDATE StockTillSchema.Goods 
-                SET name = @name, quantity = @quantity, cost = @cost, price = @price 
+                SET name = @name, category_id = @category_id, quantity = @quantity, cost = @cost, price = @price 
                 WHERE id = @id
                 """;
             ExecuteNonQuery(sql, [
                 new SqlParameter("@id", id),
                 new SqlParameter("@name", name),
+                new SqlParameter("@category_id", category_id),
                 new SqlParameter("@quantity", quantity),
                 new SqlParameter("@cost", cost),
                 new SqlParameter("@price", price)
@@ -130,6 +169,48 @@ END
                 new SqlParameter("@reduce", reduce),
                 new SqlParameter("@id", id)
             ]);
+        }
+        public static DataTable SelectAllCategories()
+        {
+            string sql = "SELECT * FROM StockTillSchema.Categories";
+            return ExecuteQuery(sql);
+        }
+        public static string? SelectCategoryById(int category_id)
+        {
+            string sql = "SELECT category FROM StockTillSchema.Categories WHERE category_id = @category_id";
+            var dataTable = ExecuteQuery(sql, new SqlParameter("@category_id", category_id));
+            return (string?)(dataTable.Rows.Count > 0 ? dataTable.Rows[0][0] : null);
+        }
+        public static int? SelectCategoryIdByCategory(string category)
+        {
+            string sql = "SELECT category_id FROM StockTillSchema.Categories WHERE category = @category";
+            var dataTable = ExecuteQuery(sql, new SqlParameter("@category", category));
+            return (int?)(dataTable.Rows.Count > 0 ? dataTable.Rows[0][0] : null);
+        }
+        public static void InsertCategory(string category)
+        {
+            string sql = """
+                INSERT INTO StockTillSchema.Categories (category)
+                VALUES (@category)
+                """;
+            ExecuteNonQuery(sql, new SqlParameter("@category", category));
+        }
+        public static void UpdateCategory(int category_id, string category)
+        {
+            string sql = """
+                UPDATE StockTillSchema.Categories 
+                SET category = @category
+                WHERE category_id = @category_id
+                """;
+            ExecuteNonQuery(sql, [
+                new SqlParameter("@category_id", category_id),
+                new SqlParameter("@category", category)
+            ]);
+        }
+        public static void DeleteCategoryById(int category_id)
+        {
+            string sql = "DELETE FROM [StockTillSchema].[Categories] WHERE [category_id] = @category_id";
+            ExecuteNonQuery(sql, new SqlParameter("@category_id", category_id));
         }
         public static void InsertLog(string id, bool isTill, int quantity)
         {
@@ -181,6 +262,7 @@ END
         {
             string sql = """
                 DROP TABLE IF EXISTS [StockTillSchema].[Goods];
+                DROP TABLE IF EXISTS [StockTillSchema].[Categories];
                 DROP TABLE IF EXISTS [StockTillSchema].[OperationLog];
                 DROP SCHEMA IF EXISTS [StockTillSchema];
                 """;
@@ -190,7 +272,7 @@ END
         {
             using var conn = new SqlConnection(ConnectionString);
             using var adapter = new SqlDataAdapter(sql, conn);
-
+            
             if (parameters != null)
             {
                 adapter.SelectCommand.Parameters.AddRange(parameters);

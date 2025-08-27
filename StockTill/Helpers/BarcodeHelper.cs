@@ -19,8 +19,8 @@ namespace StockTill.Helpers
                 Format = BarcodeFormat.CODE_128,
                 Options = new EncodingOptions
                 {
-                    Width = 360,
-                    Height = 100,
+                    Width = 720,
+                    Height = 200,
                     Margin = 10
                 }
             };

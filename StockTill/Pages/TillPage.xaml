@@ -7,7 +7,7 @@
       xmlns:ui="http://schemas.inkore.net/lib/ui/wpf/modern"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="扫码出库">
+      Title="收银出库">
     <Grid Margin="56,36,56,36">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

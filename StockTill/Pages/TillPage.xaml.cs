@@ -35,8 +35,8 @@ namespace StockTill.Pages
             data.Columns.Add("商品编号");
             data.Columns.Add("商品名称");
             data.Columns.Add("数量", typeof(int));
-            data.Columns.Add("单价", typeof(decimal));
-            data.Columns.Add("小计", typeof(decimal), "数量 * 单价");
+            data.Columns.Add("单价（元）", typeof(decimal));
+            data.Columns.Add("小计（元）", typeof(decimal), "数量 * 单价（元）");
 
             TillGrid.ItemsSource = data.DefaultView;
 
@@ -82,7 +82,7 @@ namespace StockTill.Pages
                             newRow["商品编号"] = row["id"];
                             newRow["商品名称"] = row["name"];
                             newRow["数量"] = quantity;
-                            newRow["单价"] = row["price"];
+                            newRow["单价（元）"] = row["price"];
                             data.Rows.Add(newRow);
                         }
                         else
@@ -99,7 +99,7 @@ namespace StockTill.Pages
                 }
             }
 
-            TotalPrice = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
+            TotalPrice = Convert.ToDecimal(data.Compute("SUM(小计（元）)", ""));
             CountText = $"共 {data.Compute("SUM(数量)", "")} 件商品";
             return true;
         }
@@ -121,6 +121,7 @@ namespace StockTill.Pages
         private void EraseButton_Click(object sender, RoutedEventArgs e)
         {
             InitData();
+            IdBox.Focus();
         }
 
         private void TillGrid_Loaded(object sender, RoutedEventArgs e)
@@ -162,6 +163,7 @@ namespace StockTill.Pages
             }
             data.Clear();
             TotalPrice = 0;
+            IdBox.Focus();
         }
     }
 }

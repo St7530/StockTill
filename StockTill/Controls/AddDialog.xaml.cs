@@ -1,7 +1,8 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
 using PropertyChanged;
-using System.Windows;
 using StockTill.Helpers;
+using System.Data;
+using System.Windows;
 using MessageBox = iNKORE.UI.WPF.Modern.Controls.MessageBox;
 
 namespace StockTill.Controls
@@ -22,9 +23,11 @@ namespace StockTill.Controls
             }
         }
         public string name { get; set; } = string.Empty;
+        public int CategoryId { get; set; }
         public int quantity { get; set; }
         public decimal cost { get; set; }
         public decimal price { get; set; }
+        public DataTable Categories { get; set; } = SqlHelper.SelectAllCategories();
         public AddDialog()
         {
             InitializeComponent();
@@ -45,7 +48,7 @@ namespace StockTill.Controls
             }
             else
             {
-                SqlHelper.Insert(Id, name, quantity, cost, price);
+                SqlHelper.Insert(Id, name, CategoryId, quantity, cost, price);
                 if (quantity > 0)
                 {
                     SqlHelper.InsertLog(id, false, quantity);

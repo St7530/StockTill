@@ -1,6 +1,5 @@
 ﻿using iNKORE.UI.WPF.Modern.Controls;
 using System.Windows;
-using System.Windows.Navigation;
 using Page = iNKORE.UI.WPF.Modern.Controls.Page;
 
 namespace StockTill
@@ -10,11 +9,12 @@ namespace StockTill
     /// </summary>
     public partial class MainWindow : Window
     {
-        public Pages.TillPage Page_Till = new Pages.TillPage();
-        public Pages.StockPage Page_Stock = new Pages.StockPage();
-        public Pages.QueryPage Page_Query = new Pages.QueryPage();
-        public Pages.DeveloperPage Page_Developer = new Pages.DeveloperPage();
-        public Pages.SettingsPage Page_Settings = new Pages.SettingsPage();
+        public Pages.TillPage Page_Till = new();
+        public Pages.StockPage Page_Stock = new();
+        public Pages.CategoriesPage Page_Categories = new();
+        public Pages.QueryPage Page_Query = new();
+        public Pages.DeveloperPage Page_Developer = new();
+        public Pages.SettingsPage Page_Settings = new();
         //public Pages.WelcomePage Page_Welcome = new Pages.WelcomePage();
         public MainWindow(bool isInitSuccess = true)
         {
@@ -28,6 +28,7 @@ namespace StockTill
             {
                 var i when i == NavigationViewItem_Till => Page_Till,
                 var i when i == NavigationViewItem_Stock => Page_Stock,
+                var i when i == NavigationViewItem_Categories => Page_Categories,
                 var i when i == NavigationViewItem_Query => Page_Query,
                 var i when i == NavigationViewItem_Developer => Page_Developer,
                 var i when i == NavigationViewItem_Settings => Page_Settings,

@@ -35,8 +35,8 @@ namespace StockTill.Pages
             data.Columns.Add("商品名称");
             data.Columns.Add("操作", typeof(string));
             data.Columns.Add("数量", typeof(int));
-            data.Columns.Add("单件金额", typeof(decimal));
-            data.Columns.Add("小计", typeof(decimal), "数量 * 单件金额");
+            data.Columns.Add("单件金额（元）", typeof(decimal));
+            data.Columns.Add("小计（元）", typeof(decimal), "数量 * 单件金额（元）");
             data.Columns.Add("操作时间");
 
             QueryGrid.ItemsSource = data.DefaultView;
@@ -66,8 +66,8 @@ namespace StockTill.Pages
             data.Columns["name"].ColumnName = "商品名称";
             data.Columns["operation"].ColumnName = "操作";
             data.Columns["quantity"].ColumnName = "数量";
-            data.Columns["amount"].ColumnName = "单件金额";
-            data.Columns.Add("小计", typeof(decimal), "数量 * 单件金额").SetOrdinal(5);
+            data.Columns["amount"].ColumnName = "单件金额（元）";
+            data.Columns.Add("小计（元）", typeof(decimal), "数量 * 单件金额（元）").SetOrdinal(5);
             data.Columns["time"].ColumnName = "操作时间";
 
             CountText = $"共 {data.Rows.Count} 条结果";
@@ -79,16 +79,16 @@ namespace StockTill.Pages
                 switch (row["操作"])
                 {
                     case "入库":
-                        Cost -= (int)row["数量"] * Convert.ToDecimal(row["单件金额"]);
+                        Cost -= (int)row["数量"] * Convert.ToDecimal(row["单件金额（元）"]);
                         break;
                     case "出库":
-                        Price += (int)row["数量"] * Convert.ToDecimal(row["单件金额"]);
+                        Price += (int)row["数量"] * Convert.ToDecimal(row["单件金额（元）"]);
                         break;
                 }
             }
             try
             {
-                Profit = Convert.ToDecimal(data.Compute("SUM(小计)", ""));
+                Profit = Convert.ToDecimal(data.Compute("SUM(小计（元）)", ""));
             }
             catch (Exception)
             { // 找不到结果
