@@ -23,7 +23,7 @@ namespace StockTill.Controls
             }
         }
         public string name { get; set; } = string.Empty;
-        public int CategoryId { get; set; }
+        public int CategoryId { get; set; } = 1;
         public int quantity { get; set; }
         public decimal cost { get; set; }
         public decimal price { get; set; }

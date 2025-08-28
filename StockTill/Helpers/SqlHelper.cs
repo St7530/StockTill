@@ -86,6 +86,7 @@ END
 ";
 
             ExecuteNonQuery(initSql);
+            InsertCategory("默认"); // 创建 "默认" 分类
         }
         public static DataTable SelectAll()
         {
